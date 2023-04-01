@@ -296,6 +296,7 @@
     <wire from="(1080,480)" to="(1080,490)"/>
     <wire from="(1160,480)" to="(1160,490)"/>
     <wire from="(1120,480)" to="(1120,490)"/>
+    <wire from="(1000,680)" to="(1000,700)"/>
     <wire from="(340,390)" to="(380,390)"/>
     <wire from="(340,430)" to="(380,430)"/>
     <wire from="(940,570)" to="(960,570)"/>
@@ -321,6 +322,7 @@
     <wire from="(100,70)" to="(100,90)"/>
     <wire from="(140,70)" to="(140,90)"/>
     <wire from="(180,70)" to="(180,90)"/>
+    <wire from="(1000,700)" to="(1040,700)"/>
     <wire from="(1190,480)" to="(1190,490)"/>
     <wire from="(1230,480)" to="(1230,490)"/>
     <wire from="(1270,480)" to="(1270,490)"/>
@@ -366,7 +368,6 @@
     <wire from="(270,170)" to="(270,230)"/>
     <wire from="(190,120)" to="(260,120)"/>
     <wire from="(250,450)" to="(380,450)"/>
-    <wire from="(990,700)" to="(1040,700)"/>
     <wire from="(450,390)" to="(510,390)"/>
     <wire from="(450,430)" to="(510,430)"/>
     <wire from="(970,480)" to="(970,490)"/>
@@ -390,6 +391,7 @@
     <wire from="(600,100)" to="(600,220)"/>
     <wire from="(260,170)" to="(270,170)"/>
     <wire from="(140,90)" to="(150,90)"/>
+    <wire from="(990,700)" to="(1000,700)"/>
     <comp lib="1" loc="(220,200)" name="NOT Gate">
       <a name="facing" val="north"/>
       <a name="size" val="20"/>
@@ -487,6 +489,10 @@
       <a name="label" val="IN/OUT"/>
       <a name="labelfont" val="SansSerif plain 9"/>
     </comp>
+    <comp lib="0" loc="(1000,680)" name="Probe">
+      <a name="facing" val="south"/>
+      <a name="radix" val="16"/>
+    </comp>
     <comp lib="0" loc="(70,220)" name="Clock">
       <a name="facing" val="north"/>
     </comp>
@@ -546,40 +552,40 @@
     <comp lib="4" loc="(550,100)" name="ROM">
       <a name="addrWidth" val="16"/>
       <a name="contents">addr/data: 16 8
-68*0 cd bf d0 0 d1 40 d2
-a a6 d2 a d1 41 a6 d6
-26 1 d6 26 1 d6 26 1
-d6 26 1 d6 26 1 d6 26
-1 d6 26 1 d6 26 1 d6
-26 1 d6 26 1 d6 26 1
-d6 26 1 d6 26 1 d6 26
-1 d6 26 1 d6 26 1 d6
-26 1 d6 26 1 d6 26 1
-d6 26 1 d6 26 1 d6 26
-1 d6 26 1 d6 26 1 d6
-26 1 d6 26 1 d6 26 1
-d6 26 1 d4 c3 d0 0 d1
-40 b5 14 d1 20 d2 41 ba
-59 a1 c7 d7 c0 c1 d6 49
-1 d6 a7 0 c5 c4 d7 c0
-c1 d6 43 1 d6 a7 0 c5
-c4 d7 d0 40 b0 d1 0 14
-d1 0 a1 d7 c0 c1 d6 cd
-0 d6 3d 1 d6 a7 0 c5
-c4 d7 c0 c1 d6 cd 0 d6
-37 1 d6 a7 0 c5 c4 d7
-c0 c1 d6 cd 0 d6 3d 1
-d6 49 1 d6 a7 0 c5 c4
-d7 c0 c1 d6 cd 0 d6 37
-1 d6 49 1 d6 a7 0 c5
-c4 d7 c0 c1 d6 cd 0 d6
-37 1 d6 43 1 d6 a7 0
-c5 c4 d7 c0 c1 d6 cd 0
-d6 3d 1 d6 43 1 d6 a7
-0 c5 c4 d7 d0 40 b1 89
-a1 d7 d0 40 b1 8d a1 d7
-d0 41 b1 89 a1 d7 d0 41
-b1 8d a1 d7
+68*0 d0 0 d1 40 d2 a a6
+d2 a d1 41 a6 d6 24 1
+d6 24 1 d6 24 1 d6 24
+1 d6 24 1 d6 24 1 d6
+24 1 d6 24 1 d6 24 1
+d6 24 1 d6 24 1 d6 24
+1 d6 24 1 d6 24 1 d6
+24 1 d6 24 1 d6 24 1
+d6 24 1 d6 24 1 d6 24
+1 d6 24 1 d6 24 1 d6
+24 1 d6 24 1 d6 24 1
+d6 24 1 d6 24 1 d6 24
+1 d4 c3 d0 0 d1 40 b5
+14 d1 20 d2 41 ba 59 a1
+c7 d7 c0 c1 d6 47 1 d6
+a5 0 c5 c4 d7 c0 c1 d6
+41 1 d6 a5 0 c5 c4 d7
+d0 40 b0 d1 0 14 d1 0
+a1 d7 c0 c1 d6 cb 0 d6
+3b 1 d6 a5 0 c5 c4 d7
+c0 c1 d6 cb 0 d6 35 1
+d6 a5 0 c5 c4 d7 c0 c1
+d6 cb 0 d6 3b 1 d6 47
+1 d6 a5 0 c5 c4 d7 c0
+c1 d6 cb 0 d6 35 1 d6
+47 1 d6 a5 0 c5 c4 d7
+c0 c1 d6 cb 0 d6 35 1
+d6 41 1 d6 a5 0 c5 c4
+d7 c0 c1 d6 cb 0 d6 3b
+1 d6 41 1 d6 a5 0 c5
+c4 d7 d0 40 b1 89 a1 d7
+d0 40 b1 8d a1 d7 d0 41
+b1 89 a1 d7 d0 41 b1 8d
+a1 d7
 </a>
     </comp>
     <comp lib="0" loc="(510,390)" name="Tunnel">

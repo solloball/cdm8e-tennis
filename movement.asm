@@ -10,40 +10,32 @@ asect 0x44
     ldi r1, yBall
     st r1, r2
 
-    jsr go_back_right
-    jsr go_back_right
-    jsr go_back_right
-    jsr go_back_right
-        jsr go_back_right
-    jsr go_back_right
-    jsr go_back_right
-    jsr go_back_right
+    ldi r1, 112 #set left platform
+    st r0, r1
+     
+    ldi r0, end_display #set right platform
+    st r0, r1
 
-    jsr go_back_right
-    jsr go_back_right
-    jsr go_back_right
-    jsr go_back_right
-    jsr go_back_right
-    jsr go_back_right
-    jsr go_back_right
-    jsr go_back_right
-
-    jsr go_back_right
-    jsr go_back_right
-    jsr go_back_right
-    jsr go_back_right
-
-    jsr go_back_right
-    jsr go_back_right
-    jsr go_back_right
-    jsr go_back_right
-
-    jsr go_back_right
-    jsr go_back_right
-    jsr go_back_right
-    jsr go_back_right
-
-
+    ldi r3, 0
+    while
+        tst r3
+    stays eq   # = while(1)
+        ldi r0, joystick
+        ld r0, r0
+        if 
+            tst r0
+        is eq
+        then
+            jsr go_forward_pl_left
+        else
+            if
+                tst r0
+            is pl
+            then
+                jsr go_back_pl_left
+            fi
+        fi
+    wend
 
 halt
 
@@ -199,6 +191,34 @@ inc_yBall:
     st r0, r1
     rts
 
+go_forward_pl_left:
+    ldi r0, display
+    ld r0, r1
+    inc r1
+    st r0, r1
+    rts
+
+go_back_pl_left:
+    ldi r0, display
+    ld r0, r1
+    dec r1
+    st r0, r1
+    rts
+
+go_forward_pl_right:
+    ldi r0, end_display
+    ld r0, r1
+    inc r1
+    st r0, r1
+    rts
+
+go_back_pl_right:
+    ldi r0, end_display
+    ld r0, r1
+    dec r1
+    st r0, r1
+    rts
+
 asect 0x40
 xBall: ds 1
 yBall: ds 1
@@ -209,8 +229,9 @@ yPlatform2: ds 1
 
 asect 0x00
 display:
-ds 32
-
+ds 31
+end_display:
+ds 1
 
 asect 0x20
 joystick:
