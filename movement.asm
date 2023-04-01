@@ -1,4 +1,4 @@
-asect 0x04
+asect 0x44
     setsp 0xbf #0xbf is the last avalible memory cell that we can operate with
     ldi r0, display
 
@@ -13,6 +13,37 @@ asect 0x04
     jsr go_back_right
     jsr go_back_right
     jsr go_back_right
+    jsr go_back_right
+        jsr go_back_right
+    jsr go_back_right
+    jsr go_back_right
+    jsr go_back_right
+
+    jsr go_back_right
+    jsr go_back_right
+    jsr go_back_right
+    jsr go_back_right
+    jsr go_back_right
+    jsr go_back_right
+    jsr go_back_right
+    jsr go_back_right
+
+    jsr go_back_right
+    jsr go_back_right
+    jsr go_back_right
+    jsr go_back_right
+
+    jsr go_back_right
+    jsr go_back_right
+    jsr go_back_right
+    jsr go_back_right
+
+    jsr go_back_right
+    jsr go_back_right
+    jsr go_back_right
+    jsr go_back_right
+
+
 
 halt
 
@@ -168,7 +199,7 @@ inc_yBall:
     st r0, r1
     rts
 
-asect 0x00
+asect 0x40
 xBall: ds 1
 yBall: ds 1
 yPlatform1: ds 1
@@ -176,14 +207,12 @@ yPlatform2: ds 1
 
 
 
-asect 0xc0
+asect 0x00
 display:
 ds 32
 
-asect 0xe0
-end_display:
 
-asect 0xe1
+asect 0x20
 joystick:
 ds 1
 
