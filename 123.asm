@@ -20,42 +20,61 @@ asect 0x48
         tst r0
     stays eq 
 
-        if
-            ldi r0, xBall
-            ld r0, r0
-            ldi r1, 0x1f
-            and r1, r0
-            sub r0, r1
-
-            tst r1
-        is ge   
-            ldi r0, reflectX
-            st r0, r1 # при таком вызове значение x будет меняться на противоположное, что кидать вторым регистром не имеет значения (то есть отражение :)
-        fi
-
-
-        if
-            ldi r0, yBall
-            ld r0, r0
-            ldi r1, 0x1f
-            and r1, r0
-            sub r0, r1
-            tst r1
-        is ge
-            ldi r0, reflectY
-            st r0, r1 # то же самое но со скростью y
-        fi
-        
-        ldi r0, 0
-        st r3, r0
-        ldi r0, update
-        ld r0, r3 # происходит увеличение координат, и в данном случае r3 записывается значение коордианты x для удобства в валидной форме ( то есть правые 3 бита нулевые, правые 5 бит  - само значение)
-        ldi r0, display
-        add r0, r3
+    if
         ldi r0, xBall
-        ldi r1, 20
-        or r1, r0
-        st r3, r0
+        ld r0, r0
+        ldi r1, 0x1f
+        cmp r0, r1
+    is ge
+        ldi r1, reflectX
+        st r1, r0
+    fi
+
+    if
+        ldi r0, xBall
+        ld r0, r0
+        ldi r1, 0
+        cmp r1, r0
+    is ge
+        ldi r1, reflectX
+        st r1, r0
+    fi
+
+    if
+        ldi r0, yBall
+        ld r0, r0
+        ldi r1, 0x1f
+        cmp r0 ,r1
+    is ge
+        ldi r1, reflectY
+        st r1, r0
+    fi
+
+    if
+        ldi r0, yBall
+        ld r0, r0
+        ldi r1, 0
+        cmp r1 ,r0
+    is ge
+        ldi r1, reflectY
+        st r1, r0
+    fi
+
+    ldi r0, 0
+    st r3, r0
+
+    ldi r0, update
+    ld r0, r3
+    ldi r0, display
+    add r0, r3
+
+    ldi r2, yBall
+    ld r2, r2
+    ldi r1, 32
+    or r2, r1
+
+    st r3, r1
+
     wend
 
 halt
