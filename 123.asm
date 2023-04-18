@@ -10,7 +10,7 @@ asect 0x48
     st r1, r2
 
 
-    ldi r0, V
+    ldi r0, V #cant use 8 and 0
     ldi r1, 0x77 # левые четыре биты отводятся под занчение скорости для координаты Y, которые хранятся в дополненном коде, 4 правых бита под значения скорости X
     st r0, r1
 
@@ -34,21 +34,24 @@ asect 0x48
         #  reflect on Y
         
         if
+            ldi r0, yBall
+            ld r0, r0
             ldi r1, 0x1f
-            cmp r2 ,r1
+            cmp r0, r1
         is ge
             ldi r1, reflectY
             st r1, r0
         fi
-
         if
+            ldi r0, yBall
+            ld r0, r0
             ldi r1, 0
-            cmp r1 ,r2
+            cmp r1, r0
         is ge
             ldi r1, reflectY
             st r1, r0
         fi
-
+        
         #  reflect on X
 
         if
@@ -60,7 +63,6 @@ asect 0x48
             ldi r1, reflectX
             st r1, r0
         fi
-
         if
             ldi r0, xBall
             ld r0, r0
@@ -101,15 +103,30 @@ asect 0x48
         if 
             tst r0
         is eq
-        then
             jsr go_up_pl_left
         else
             if
                 tst r0
             is pl
-            then
                 jsr go_down_pl_left
             fi
+        fi
+
+        # movement of right platform
+        ldi r0, 0x1e # x of right platform 
+        ld r0, r0
+        inc r0
+        ldi r1, 0x1f # 00011111
+        and r0, r1
+        ldi r2, yBall
+        ld r2, r2
+        if
+            cmp r2, r1
+        is lo
+            jsr go_down_pl_right
+        else 
+            jsr go_up_pl_right
+
         fi
 
     wend
@@ -131,7 +148,7 @@ go_up_pl_left:
     ldi r0, 1 # x of left platform 
     ld r0, r1
     if
-    ldi r2, 0x7d #top_display - 2
+        ldi r2, 0x7d #top_display - 2
         cmp r1, r2
     is ne
         inc r1
@@ -155,7 +172,7 @@ go_up_pl_right:
     ldi r0, 0x1e # x of right platform 
     ld r0, r1
     if
-    ldi r2, 0x7d #top_display - 2
+        ldi r2, 0x7d #top_display - 2
         cmp r1, r2
     is ne
         inc r1
