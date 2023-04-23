@@ -4,104 +4,265 @@ asect 0x48
     ldi r2, 10 #set coord x to xBalls
     st r1, r2
 
-    ldi r2, 10 #set coord y to yBalls
     ldi r1, yBall
+    #ldi r2, 10 #set coord y to yBalls
+    ldi r2, 0x3a #set coord y to yBalls
     st r1, r2
 
 
-    ldi r0, V
-    ldi r1, 0x77 # set value of speed ( правые четыре биты отводятся под занчение скорости для координаты Y, которые хранятся в дополненном коде, 4 правых бита под значения скорости X)
+    ldi r0, V #cant use 8 and 0
+    ldi r1, 0x77 #0x99 #0x77 # левые четыре биты отводятся под занчение скорости для координаты Y, которые хранятся в дополненном коде, 4 правых бита под значения скорости X
     st r0, r1
 
 
-    jsr draw_pixel
-    ldi r0, update
-    ld r0, r3 # происходит увеличение координат, и в данном случае r3 записывается значение коордианты x для удобства в валидной форме ( то есть правые 3 бита нулевые, правые 5 бит  - само значение)
+    ldi r0, display
+    ldi r1, 110 #set left platform in the middle
+    inc r0
+    st r0, r1
 
-    jsr draw_pixel
-    ldi r0, update
-    ld r0, r3
-    jsr draw_pixel
-    ldi r0, update
-    ld r0, r3
-    jsr draw_pixel
-    ldi r0, update
-    ld r0, r3
-    jsr draw_pixel
-    ldi r0, update
-    ld r0, r3
-
-    ldi r0, reflectX
-    st r0, r1 # при таком вызове значение x будет меняться на противоположное, что кидать вторым регистром не имеет значения (то есть отражение :)
-
-    jsr draw_pixel
-    ldi r0, update
-    ld r0, r3
-    jsr draw_pixel
-    ldi r0, update
-    ld r0, r3
-    jsr draw_pixel
-    ldi r0, update
-    ld r0, r3
-    jsr draw_pixel
-    ldi r0, update
-    ld r0, r3
-    jsr draw_pixel
-    ldi r0, update
-    ld r0, r3
-
-    ldi r0, reflectY
-    st r0, r1 # то же самое но со скростью y
-
-    jsr draw_pixel
-    ldi r0, update
-    ld r0, r3
-    jsr draw_pixel
-    ldi r0, update
-    ld r0, r3
-    jsr draw_pixel
-    ldi r0, update
-    ld r0, r3
-    jsr draw_pixel
-    ldi r0, update
-    ld r0, r3
-    jsr draw_pixel
-    ldi r0, update
-    ld r0, r3
+    ldi r0, end_display #set right platform
+    ldi r1, 110 #set left platform in the middle
+    dec r0
+    st r0, r1
 
 
+    while
+        ldi r0, 0
+        tst r0
+    stays eq 
+        # clear pixel
+
+        ldi r0, 0 
+        st r3, r0
+
+        # update pixel 
+
+        ldi r0, update
+        ld r0, r3
+        ldi r0, display
+        add r0, r3
+
+        ldi r2, yBall
+        ld r2, r2
+        ldi r1, 32
+        or r2, r1
+
+        # draw pixel
+        st r3, r1
+
+        
+        jsr reflextion_on_y
+        jsr reflextion_on_x
+
+
+        jsr move_right_platform_main
+        jsr move_left_platform_main
+
+    wend
 halt
 
-draw_pixel:
-    ldi r0, display
-    ldi r1,xBall
-    ldi r3, 0x1f
-    ld r1, r1
-    and r3, r1 
-    add r1, r0
-    ldi r1, 0x20 #write ball
+
+################################################
+move_right_platform_main:
+    # movement of right platform
+    ldi r0, 0x1e # x of right platform 
+    ld r0, r0
+    inc r0
+    ldi r1, 0x1f # 00011111
+    and r0, r1
     ldi r2, yBall
     ld r2, r2
-    and r3, r2 
-    or r2, r1
-    st r0, r1
+    if
+        cmp r2, r1
+    is lo
+        jsr go_down_pl_right
+    else 
+        jsr go_up_pl_right
+    fi
     rts
 
-clr_pixel:
-    ldi r0, xBall
+
+move_left_platform_main:
+    # movement of left platform
+    ldi r0, joystick
     ld r0, r0
-    ldi r1, display
-    add r1, r0
-    ldi r1, 0
-    st r0, r1 
+    if 
+        tst r0
+    is eq
+        jsr go_up_pl_left
+    else
+        if
+            tst r0
+        is pl
+            jsr go_down_pl_left
+        fi
+    fi
+    rts
+
+reflextion_on_x:
+        #  reflect on X
+        if
+            ldi r0, xBall
+            ld r0, r0
+            ldi r1, 0x1e
+            cmp r0, r1
+        is ge
+            if
+                ldi r0, yBall
+                ld r0, r0
+                ldi r1, 0x1e # x of right platform 
+                ld r1, r1 #get coord of the middle pixel of the left platform
+                ldi r2, 0x1f # 00011111
+                and r1, r2
+                inc r2
+                cmp r0, r2
+            is eq, or
+                inc r2 #get coord of the upper pixel of the right platform
+                cmp r0, r2
+            is eq, or
+                dec r2
+                dec r2 #get coord of the lower pixel of the right platform
+                cmp r0, r2
+
+            is eq
+            then
+                ldi r1, reflectX
+                st r1, r0
+                ldi r0, update
+                ld r0, r3
+                ldi r0, update
+                ld r0, r3
+            else
+                halt
+            fi
+        fi
+        if
+            ldi r0, xBall
+            ld r0, r0
+            ldi r1, 1
+            cmp r1, r0
+        is ge
+            if
+                ldi r0, yBall
+                ld r0, r0
+                ldi r1, 1 # x of left platform 
+                ld r1, r1 #get coord of the middle pixel of the left platform
+                inc r1
+                ldi r2, 0x1f # 00011111
+                and r1, r2
+                cmp r0, r2
+            is eq, or
+                inc r2 #get coord of the upper pixel of the left platform
+                cmp r0, r2
+            is eq, or
+                dec r2
+                dec r2 #get coord of the lower pixel of the left platform
+                cmp r0, r2
+
+            is eq
+            then
+                ldi r1, reflectX
+                st r1, r0
+                ldi r0, update
+                ld r0, r3
+                ldi r0, update
+                ld r0, r3
+            else
+                halt
+            fi
+        fi
+    rts
+
+
+reflextion_on_y:
+        #  reflect on Y
+        
+        if
+            ldi r0, yBall
+            ld r0, r0
+            ldi r1, 0x1f
+            cmp r0, r1
+        is ge
+            ldi r1, reflectY
+            st r1, r0
+        fi
+        if
+            ldi r0, yBall
+            ld r0, r0
+            ldi r1, 0
+            cmp r1, r0
+        is ge
+            ldi r1, reflectY
+            st r1, r0
+        fi
+    rts
+
+    
+
+#clear_pixel:
+#    ldi r0, display
+#    ldi r1, xBall
+#    ldi r3, 0x1f
+#    ld r1, r1
+#    and r3, r1 
+#    add r1, r0
+#    ldi r1, 0x0
+#    st r0, r1 
+#    rts
+
+go_up_pl_left:
+    ldi r0, 1 # x of left platform 
+    ld r0, r1
+    if
+        ldi r2, 0x7d #top_display - 2
+        cmp r1, r2
+    is ne
+        inc r1
+        st r0, r1
+    fi
+    rts
+
+go_down_pl_left:
+    ldi r0, 1 # x of left platform 
+    ld r0, r1
+    if
+        ldi r2, 0x60 #bottom_display + 2
+        cmp r2, r1
+    is ne
+        dec r1
+        st r0, r1
+    fi
+    rts
+
+go_up_pl_right:
+    ldi r0, 0x1e # x of right platform 
+    ld r0, r1
+    if
+        ldi r2, 0x7d #top_display - 2
+        cmp r1, r2
+    is ne
+        inc r1
+        st r0, r1
+    fi
+    rts
+
+go_down_pl_right:
+    ldi r0, 0x1e # x of right platform 
+    ld r0, r1
+    if
+        ldi r2, 0x60 #bottom_display + 2
+        cmp r2, r1
+    is ne
+        dec r1
+        st r0, r1
+    fi
     rts
 
 asect 0x40
 yPlatform1: ds 1
 yPlatform2: ds 1
-top_display: dc 0x7f
+top_display: dc 0x3f
 bottom_display: dc 0x5e
-
 
 
 asect 0x00

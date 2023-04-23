@@ -11,7 +11,7 @@ asect 0x48
 
 
     ldi r0, V #cant use 8 and 0
-    ldi r1, 0x77 # левые четыре биты отводятся под занчение скорости для координаты Y, которые хранятся в дополненном коде, 4 правых бита под значения скорости X
+    ldi r1, 0x99 #0x77 # левые четыре биты отводятся под занчение скорости для координаты Y, которые хранятся в дополненном коде, 4 правых бита под значения скорости X
     st r0, r1
 
 
@@ -29,7 +29,26 @@ asect 0x48
         ldi r0, 0
         tst r0
     stays eq 
+        # clear pixel
 
+        ldi r0, 0 
+        st r3, r0
+
+        # update pixel 
+
+        ldi r0, update
+        ld r0, r3
+        ldi r0, display
+        add r0, r3
+
+        ldi r2, yBall
+        ld r2, r2
+        ldi r1, 32
+        or r2, r1
+
+        # draw pixel
+
+        st r3, r1
 
         #  reflect on Y
         
@@ -53,7 +72,6 @@ asect 0x48
         fi
         
         #  reflect on X
-
         if
             ldi r0, xBall
             ld r0, r0
@@ -66,35 +84,43 @@ asect 0x48
         if
             ldi r0, xBall
             ld r0, r0
-            ldi r1, 2
+            ldi r1, 1
             cmp r1, r0
         is ge
-            ldi r1, reflectX
-            st r1, r0
+            if
+                ldi r0, yBall
+                ld r0, r0
+                ldi r1, 1 # x of left platform 
+                ld r1, r1 #get coord of the middle pixel of the left platform
+                inc r1
+                ldi r2, 0x1f # 00011111
+                and r1, r2
+                cmp r0, r2
+            is eq, or
+                inc r2 #get coord of the upper pixel of the left platform
+                cmp r0, r2
+            is eq, or
+                dec r2
+                dec r2 #get coord of the lower pixel of the left platform
+                cmp r0, r2
+
+            is eq
+            then
+                ldi r1, reflectX
+                st r1, r0
+                ldi r0, update
+                ld r0, r3
+                ldi r0, update
+                ld r0, r3
+            else
+                halt
+            fi
         fi
 
 
+        jsr move_right_platform_main
 
-        # clear pixel
 
-        ldi r0, 0 
-        st r3, r0
-
-        # update pixel 
-
-        ldi r0, update
-        ld r0, r3
-        ldi r0, display
-        add r0, r3
-
-        ldi r2, yBall
-        ld r2, r2
-        ldi r1, 32
-        or r2, r1
-
-        # draw pixel
-
-        st r3, r1
 
         # movement of left platform
 
@@ -111,28 +137,36 @@ asect 0x48
                 jsr go_down_pl_left
             fi
         fi
+        
 
-        # movement of right platform
-        ldi r0, 0x1e # x of right platform 
-        ld r0, r0
-        inc r0
-        ldi r1, 0x1f # 00011111
-        and r0, r1
-        ldi r2, yBall
-        ld r2, r2
-        if
-            cmp r2, r1
-        is lo
-            jsr go_down_pl_right
-        else 
-            jsr go_up_pl_right
 
-        fi
 
     wend
 
 halt
+################################################
+move_right_platform_main:
+    # movement of right platform
+    ldi r0, 0x1e # x of right platform 
+    ld r0, r0
+    inc r0
+    ldi r1, 0x1f # 00011111
+    and r0, r1
+    ldi r2, yBall
+    ld r2, r2
+    if
+        cmp r2, r1
+    is lo
+        jsr go_down_pl_right
+    else 
+        jsr go_up_pl_right
+    fi
+    rts
 
+
+x_reflexion_test_from_main:
+    
+######################################
 clear_pixel:
     ldi r0, display
     ldi r1, xBall
