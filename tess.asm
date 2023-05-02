@@ -64,7 +64,6 @@ main_cycle:
         jsr reflextion_on_y
         jsr reflextion_on_x
 
-
         jsr move_right_platform_main
         jsr move_left_platform_main
 
@@ -149,6 +148,13 @@ reflextion_on_x:
                 inc r1
                 ldi r0, score_left
                 st r0, r1
+                # if score is 13, then stop the game
+                if 
+                    ldi r0, 12
+                    cmp r0, r1
+                is lo
+                    halt
+                fi
                 jmp main_cycle
             fi
         fi
@@ -190,6 +196,14 @@ reflextion_on_x:
                 inc r1
                 ldi r0, score_right
                 st r0, r1
+                
+                # if score is 13, then stop the game
+                if 
+                    ldi r0, 12
+                    cmp r0, r1
+                is lo
+                    halt
+                fi
                 jmp main_cycle
             fi
         fi
