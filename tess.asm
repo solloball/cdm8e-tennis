@@ -1,12 +1,22 @@
 asect 0x48
-
-    ldi r1, xBall
-    ldi r2, 10 #set coord x to xBalls
+    #set left and right scores to 0
+    ldi r1, score_left
+    ldi r2, 0
     st r1, r2
 
-    ldi r1, yBall
-    #ldi r2, 10 #set coord y to yBalls
-    ldi r2, 0x3a #set coord y to yBalls
+    ldi r1, score_right
+    st r1, r2
+
+main_cycle:
+
+    #set coord x to xBalls
+    ldi r1, xBall 
+    ldi r2, 10 
+    st r1, r2
+
+    #set coord y to yBalls
+    ldi r1, yBall 
+    ldi r2, 0x3a 
     st r1, r2
 
 
@@ -133,7 +143,13 @@ reflextion_on_x:
                 ldi r0, update
                 ld r0, r3
             else
-                halt
+                #inc score of the player
+                ldi r0, score_left
+                ld r0, r1
+                inc r1
+                ldi r0, score_left
+                st r0, r1
+                jmp main_cycle
             fi
         fi
         if
@@ -168,7 +184,13 @@ reflextion_on_x:
                 ldi r0, update
                 ld r0, r3
             else
-                halt
+                #inc score of the computer
+                ldi r0, score_right
+                ld r0, r1
+                inc r1
+                ldi r0, score_right
+                st r0, r1
+                jmp main_cycle
             fi
         fi
     rts
