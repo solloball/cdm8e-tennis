@@ -11,17 +11,18 @@ main_cycle:
 
     #set coord x to xBalls
     ldi r1, xBall 
-    ldi r2, 10 
+    ldi r2, 16 
     st r1, r2
 
     #set coord y to yBalls
     ldi r1, yBall 
-    ldi r2, 0x3a 
+    ldi r2, 16
     st r1, r2
 
 
     ldi r0, V #cant use 8 and 0
-    ldi r1, 0x77 
+    ldi r1, rand
+    ld r1, r1
     #0x99# левые четыре биты отводятся под занчение скорости для координаты Y, которые хранятся в дополненном коде,
     #4 правых бита под значения скорости X
     st r0, r1
@@ -203,6 +204,7 @@ reflextion_on_x:
                 is lo
                     halt
                 fi
+                
                 jmp main_cycle
             fi
         fi
@@ -329,6 +331,10 @@ ds 1
 
 asect 0x28
 reflectY:
+ds 1
+
+asect 0x29
+rand:
 ds 1
 
 end
