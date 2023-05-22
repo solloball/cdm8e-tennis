@@ -11,18 +11,19 @@ main_cycle:
 
     #set coord x to xBalls
     ldi r1, xBall 
-    ldi r2, 16 
+    ldi r2, 15 
     st r1, r2
 
     #set coord y to yBalls
     ldi r1, yBall 
-    ldi r2, 16
+    ldi r2, 15
     st r1, r2
 
 
-    ldi r0, V #cant use 8 and 0
+    ldi r0, V
     ldi r1, rand
     ld r1, r1
+    #ld r1, r1
     #0x99# левые четыре биты отводятся под занчение скорости для координаты Y, которые хранятся в дополненном коде,
     #4 правых бита под значения скорости X
     st r0, r1
@@ -47,6 +48,9 @@ main_cycle:
         ldi r0, 0 
         st r3, r0
 
+        jsr reflextion_on_y
+        jsr reflextion_on_x
+
         # update pixel 
         ldi r0, update
         ld r0, r3
@@ -60,9 +64,6 @@ main_cycle:
         # draw pixel
         st r3, r1
 
-        
-        jsr reflextion_on_y
-        jsr reflextion_on_x
 
         jsr move_right_platform_main
         jsr move_left_platform_main
@@ -204,7 +205,7 @@ reflextion_on_x:
                 is lo
                     halt
                 fi
-                
+
                 jmp main_cycle
             fi
         fi
